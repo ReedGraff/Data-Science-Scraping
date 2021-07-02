@@ -441,19 +441,105 @@ import requests
 from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup
 import time
+import os
 
 query = "myusage"
-
-df = pd.DataFrame({"URL":[],"BOOL":[""]})
-print(df)
+query_return = []
 
 for i in New_Utility_Links:
     try:
-        df = pd.DataFrame({"Names":["Tom", "Bill", "Jerry"],"Age":["5", "50", "15"]})
-        print(df)
-    except:
+        df = pd.DataFrame({"URL":[i],"BOOL":["True"]})
 
-query_return = df['BOOL'].tolist()
+        external_urls = []
+
+        domain_name = urlparse(i).netloc
+        req = requests.get(i)
+        soup = BeautifulSoup(req.content, 'html.parser')
+        for tag in soup.findAll("a"):
+
+            os.system('cls')
+            print(df)
+            print(""*2)
+            print("Testing " + i)
+
+            href = tag.attrs.get("href")
+            if href == "" or href is None:
+                continue
+            href = urljoin(i, href)
+            parsed_href = urlparse(href)
+            href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
+
+            # URL TRACKING
+            if domain_name not in href:
+                if href not in external_urls:
+                    if ".com" in href or ".net" in href or ".org" in href or ".co" in href or ".us" in href or ".uk" in href or ".in" in href:
+                        if ".pdf" not in href or ".DOC" not in href or ".DOCX" not in href:
+                            external_urls.append(href)
+                continue
+            else:
+                if href not in df["URL"]:
+                    if ".com" in href or ".net" in href or ".org" in href or ".co" in href or ".us" in href or ".uk" in href or ".in" in href:
+                        if ".pdf" not in href and ".DOC" not in href and ".DOCX" not in href:
+                            append_list = (href, "False")
+                            df_length = len(df)
+                            df.loc[df_length] = append_list
+                continue
+        # URL TESTING
+        if query in external_urls:
+            query_return.append("True")
+        else:
+            for j in df["URL"]:
+                if df.loc[df['URL'] == j, 'BOOL'].iloc[0] == "False":
+                    try:
+                        #print("Testing " + j + " inside of " + i)
+                        df.loc[df['URL'] == j, 'BOOL'].iloc[0] = "True"
+
+                        req = requests.get(j)
+                        soup = BeautifulSoup(req.content, 'html.parser')
+                        for tag in soup.findAll("a"):
+                            href = tag.attrs.get("href")
+                            if href == "" or href is None:
+                                continue
+                            href = urljoin(j, href)
+                            parsed_href = urlparse(href)
+                            href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
+                            
+                            # URL TRACKING
+                            if href in external_urls:
+                                continue
+                            if domain_name not in href:
+                                if href not in external_urls:
+                                    if ".com" in href or ".net" in href or ".org" in href or ".co" in href or ".us" in href or ".uk" in href or ".in" in href:
+                                        if ".pdf" not in href or ".DOC" not in href or ".DOCX" not in href:
+                                            external_urls.append(href)
+                            else:
+                                if href not in df["URL"]:
+                                    if ".com" in href or ".net" in href or ".org" in href or ".co" in href or ".us" in href or ".uk" in href or ".in" in href:
+                                        if ".pdf" not in href and ".DOC" not in href and ".DOCX" not in href:
+                                            append_list = (href, "False")
+                                            df_length = len(df)
+                                            df.loc[df_length] = append_list
+                                continue
+                    except:
+                        continue
+                else:
+                    continue
+            
+            checks = []
+            for exlink in external_urls:
+                if query in exlink:
+                    checks.append("True")
+                else:
+                    checks.append("False")
+            
+            if "True" in checks:
+                query_return.append("True")
+            else:
+                query_return.append("False")
+
+    except:
+        query_return.append("Failure")
+
 for boolean in query_return:
     print(boolean)
 
