@@ -435,6 +435,136 @@ for boolean in query_return:
 
 
 
+"""
+#JEA 500?
+
+import pandas as pd
+import requests
+from urllib.parse import urlparse, urljoin
+from bs4 import BeautifulSoup
+import time
+import os
+
+query = "myusage"
+query_return = []
+
+for i in New_Utility_Links:
+    try:
+        df = pd.DataFrame({"URL":[i],"BOOL":["True"]})
+
+        external_urls = []
+
+        domain_name = urlparse(i).netloc
+        req = requests.get(i)
+        soup = BeautifulSoup(req.content, 'html.parser')
+        for tag in soup.findAll("a"):
+
+            os.system('cls')
+            print(df)
+            print(""*2)
+            print("Testing " + i)
+
+            href = tag.attrs.get("href")
+            if href == "" or href is None:
+                continue
+            href = urljoin(i, href)
+            parsed_href = urlparse(href)
+            href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
+
+            # URL TRACKING
+            if domain_name not in href:
+                if href not in external_urls:
+                    if ".com" in href or ".net" in href or ".org" in href or ".co" in href or ".us" in href or ".uk" in href or ".in" in href:
+                        if ".pdf" not in href or ".DOC" not in href or ".DOCX" not in href:
+                            external_urls.append(href)
+                continue
+            else:
+                if href not in df["URL"]:
+                    if ".com" in href or ".net" in href or ".org" in href or ".co" in href or ".us" in href or ".uk" in href or ".in" in href:
+                        if ".pdf" not in href and ".DOC" not in href and ".DOCX" not in href:
+                            append_list = (href, "False")
+                            df_length = len(df)
+                            df.loc[df_length] = append_list
+                continue
+        # URL TESTING
+        if query in external_urls:
+            query_return.append("True")
+        else:
+            for j in df["URL"]:
+                if df.loc[df['URL'] == j, 'BOOL'].iloc[0] == "False":
+                    try:
+                        # Start Time
+                        state = "True"
+                        max_time = 15
+                        start_time = time.time()  # remember when we started
+                        while (time.time() - start_time) < max_time and state == "True":
+                            # End Time
+
+                            #print("Testing " + j + " inside of " + i)
+                            df.loc[df['URL'] == j, 'BOOL'].iloc[0] = "True"
+
+                            req = requests.get(j)
+                            soup = BeautifulSoup(req.content, 'html.parser')
+                            for tag in soup.findAll("a"):
+                                href = tag.attrs.get("href")
+                                if href == "" or href is None:
+                                    continue
+                                href = urljoin(j, href)
+                                parsed_href = urlparse(href)
+                                href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
+                                
+                                # URL TRACKING
+                                if href in external_urls:
+                                    continue
+                                if domain_name not in href:
+                                    if href not in external_urls:
+                                        if ".com" in href or ".net" in href or ".org" in href or ".co" in href or ".us" in href or ".uk" in href or ".in" in href:
+                                            if ".pdf" not in href or ".DOC" not in href or ".DOCX" not in href:
+                                                external_urls.append(href)
+                                                checks = []
+                                                for exlink in external_urls:
+                                                    if query in exlink:
+                                                        checks.append("True")
+                                                    else:
+                                                        checks.append("False")
+
+                                                if "True" in checks:
+                                                    query_return.append("True")
+                                                    state = "False"
+                                else:
+                                    if href not in df["URL"]:
+                                        if ".com" in href or ".net" in href or ".org" in href or ".co" in href or ".us" in href or ".uk" in href or ".in" in href:
+                                            if ".pdf" not in href and ".DOC" not in href and ".DOCX" not in href:
+                                                append_list = (href, "False")
+                                                df_length = len(df)
+                                                df.loc[df_length] = append_list
+                                    continue
+                    except:
+                        continue
+                else:
+                    continue
+            
+            checks = []
+            for exlink in external_urls:
+                if query in exlink:
+                    checks.append("True")
+                else:
+                    checks.append("False")
+            
+            if "True" in checks:
+                query_return.append("True")
+            else:
+                query_return.append("False")
+
+    except:
+        query_return.append("Failure")
+
+for boolean in query_return:
+    print(boolean)
+"""
+
+"""
+#JEA 500?
 
 import pandas as pd
 import requests
@@ -542,6 +672,311 @@ for i in New_Utility_Links:
 
 for boolean in query_return:
     print(boolean)
+"""
+
+
+
+"""
+import pandas as pd
+import requests
+from urllib.parse import urlparse, urljoin
+from bs4 import BeautifulSoup
+import time
+import os
+
+query = "myusage"
+query_return = []
+
+for i in New_Utility_Links:
+    try:
+        df = pd.DataFrame({"URL":[i],"BOOL":["True"]})
+
+        external_urls = []
+
+        domain_name = urlparse(i).netloc
+        req = requests.get(i)
+        soup = BeautifulSoup(req.content, 'html.parser')
+        for tag in soup.findAll("a"):
+
+            os.system('cls')
+            print(df)
+            print(""*2)
+            print("Testing " + i)
+
+            href = tag.attrs.get("href")
+            if href == "" or href is None:
+                continue
+            href = urljoin(i, href)
+            parsed_href = urlparse(href)
+            href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
+
+            # URL TRACKING
+            if domain_name not in href:
+                if href not in external_urls:
+                    if ".pdf" not in href or ".DOC" not in href or ".DOCX" not in href:
+                        external_urls.append(href)
+                continue
+            else:
+                if href not in df["URL"].tolist():
+                    if ".pdf" not in href and ".DOC" not in href and ".DOCX" not in href:
+                        append_list = (href, "False")
+                        df_length = len(df)
+                        df.loc[df_length] = append_list
+                continue
+        # URL TESTING
+        if query in external_urls:
+            query_return.append("True")
+        else:
+            num = 0
+            for j in df["URL"].tolist():
+                if df.loc[df['URL'] == j, 'BOOL'].iloc[0] == "False":
+                    try:
+                        # Start Time
+                        os.system('cls')
+                        num += 1
+                        print(str(time.time() - start_time))
+                        print(str(len(df["URL"].tolist())))
+                        print(str(num))
+
+                        state = "True"
+                        max_time = 15
+                        start_time = time.time()  # remember when we started
+                        while (time.time() - start_time) < max_time and state == "True":
+                            print(len(df["URL"]))
+                            
+                            # End Time
+
+                            #print("Testing " + j + " inside of " + i)
+                            df.loc[df['URL'] == j, 'BOOL'].iloc[0] = "True"
+
+                            req = requests.get(j)
+                            soup = BeautifulSoup(req.content, 'html.parser')
+                            for tag in soup.findAll("a"):
+                                href = tag.attrs.get("href")
+                                if href == "" or href is None:
+                                    continue
+                                href = urljoin(j, href)
+                                parsed_href = urlparse(href)
+                                href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
+                                
+                                # URL TRACKING
+                                if href in external_urls:
+                                    continue
+                                if domain_name not in href:
+                                    if href not in external_urls:
+                                        if ".pdf" not in href or ".DOC" not in href or ".DOCX" not in href:
+                                            external_urls.append(href)
+                                            checks = []
+                                            for exlink in external_urls:
+                                                if query in exlink:
+                                                    checks.append("True")
+                                                else:
+                                                    checks.append("False")
+
+                                            if "True" in checks:
+                                                query_return.append("True")
+                                                state = "False"
+                                else:
+                                    if href not in df["URL"]:
+                                        if ".pdf" not in href and ".DOC" not in href and ".DOCX" not in href:
+                                            append_list = (href, "False")
+                                            df_length = len(df)
+                                            df.loc[df_length] = append_list
+                                    continue
+                    except:
+                        continue
+                else:
+                    continue
+            
+            checks = []
+            for exlink in external_urls:
+                if query in exlink:
+                    checks.append("True")
+                else:
+                    checks.append("False")
+            
+            if "True" in checks:
+                query_return.append("True")
+            else:
+                query_return.append("False")
+
+    except:
+        query_return.append("Failure")
+
+for boolean in query_return:
+    print(boolean)
+"""
+
+
+
+
+
+# Final... Compare the final_df to other variations to affirm reliability and enxure more accurate results
+import pandas as pd
+import requests
+from urllib.parse import urlparse, urljoin
+from bs4 import BeautifulSoup
+import time
+import os
+
+query = "myusage"
+query_return = []
+req_run = int(input("How many times would you like to run this script?: "))
+query_ret_dfs = []
+final_df = pd.DataFrame()
+for i in range(req_run):
+    df_name = "df%d" % i
+
+    for i in New_Utility_Links:
+        try:
+            df = pd.DataFrame({"URL":[i],"BOOL":["True"]})
+
+            external_urls = []
+
+            domain_name = urlparse(i).netloc
+            req = requests.get(i)
+            soup = BeautifulSoup(req.content, 'html.parser')
+            for tag in soup.findAll("a"):
+
+                os.system('cls')
+                print(df)
+                print(""*2)
+                print("Testing " + i)
+
+                href = tag.attrs.get("href")
+                if href == "" or href is None:
+                    continue
+                href = urljoin(i, href)
+                parsed_href = urlparse(href)
+                href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
+
+                # URL TRACKING
+                if domain_name not in href:
+                    if href not in external_urls:
+                        if ".pdf" not in href or ".DOC" not in href or ".DOCX" not in href:
+                            external_urls.append(href)
+                    continue
+                else:
+                    if href not in df["URL"].tolist():
+                        if ".pdf" not in href and ".DOC" not in href and ".DOCX" not in href:
+                            append_list = (href, "False")
+                            df_length = len(df)
+                            df.loc[df_length] = append_list
+                    continue
+            # URL TESTING
+            if query in external_urls:
+                query_return.append("True")
+            else:
+                num = 0
+                for j in df["URL"].tolist():
+                    if df.loc[df['URL'] == j, 'BOOL'].iloc[0] == "False":
+                        try:
+                            # Start Time
+                            os.system('cls')
+                            num += 1
+                            print(str(time.time() - start_time))
+                            print(str(len(df["URL"].tolist())))
+                            print(str(num))
+
+                            state = "True"
+                            
+                            
+                            print(len(df["URL"]))
+                            
+                            # End Time
+
+                            #print("Testing " + j + " inside of " + i)
+                            df.loc[df['URL'] == j, 'BOOL'].iloc[0] = "True"
+
+                            req = requests.get(j)
+                            soup = BeautifulSoup(req.content, 'html.parser')
+                            for tag in soup.findAll("a"):
+                                max_time = 20
+                                start_time = time.time()
+                                while (time.time() - start_time) < max_time and state == "True":
+                                    href = tag.attrs.get("href")
+                                    if href == "" or href is None:
+                                        continue
+                                    href = urljoin(j, href)
+                                    parsed_href = urlparse(href)
+                                    href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
+                                    
+                                    # URL TRACKING
+                                    if href in external_urls:
+                                        continue
+                                    if domain_name not in href:
+                                        if href not in external_urls:
+                                            if ".pdf" not in href or ".DOC" not in href or ".DOCX" not in href:
+                                                external_urls.append(href)
+                                                checks = []
+                                                for exlink in external_urls:
+                                                    if query in exlink:
+                                                        checks.append("True")
+                                                    else:
+                                                        checks.append("False")
+
+                                                if "True" in checks:
+                                                    query_return.append("True")
+                                                    state = "False"
+                                    else:
+                                        if href not in df["URL"]:
+                                            if ".pdf" not in href and ".DOC" not in href and ".DOCX" not in href:
+                                                append_list = (href, "False")
+                                                df_length = len(df)
+                                                df.loc[df_length] = append_list
+                                        continue
+                        except:
+                            continue
+                    else:
+                        continue
+                
+                checks = []
+                for exlink in external_urls:
+                    if query in exlink:
+                        checks.append("True")
+                    else:
+                        checks.append("False")
+                
+                if "True" in checks:
+                    query_return.append("True")
+                else:
+                    query_return.append("False")
+
+        except:
+            query_return.append("Failure")
+    #print(query_ret_dfs)
+    df_name = pd.DataFrame({df_name:query_return})
+    query_ret_dfs.append(df_name)
+    #print(df_name)
+    #print(df0)
+    if len(query_ret_dfs) >= 2:
+        final_df = pd.concat([query_ret_dfs[0], df_name], axis=1)
+
+print(final_df)
+
+final_df.replace(to_replace ="False", value ="nan")
+final_df.replace(to_replace ="Falure", value ="nan")
+
+for i in final_df.columns:
+    final_df["df0"].fillna(final_df[i])
+
+print(final_df)
+
+for i in final_df.columns:
+    if i == "df0":
+        continue
+    else:
+        final_df = final_df.drop([i], axis=1)
+
+print(final_df)
+
+final = final_df["df0"].tolist()
+
+for i in final:
+    print(i)
+
+
+
 
 
 
